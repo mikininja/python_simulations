@@ -9,12 +9,14 @@ import pygame
 from pygame.locals import Rect
 from math import ceil
 from math import sqrt
-L=800
+L=1000
 SIZEX=L
 SIZEY=L
 
 def isPrimo(n):
-    if n==1 or n==2:
+    if n==1:
+        return False
+    if n==2:
         return True
     for i in range(2,1+int(ceil(sqrt(n)))):
         if n%i==0:
@@ -22,7 +24,8 @@ def isPrimo(n):
     return True
 
 class Punto(object):
-    def __init__(self,x,y,p):
+    def __init__(self,x,y,p,n):
+        self.n=n
         self.x=x
         self.y=y
         self.primo=p
@@ -39,7 +42,7 @@ class Board(object):
         self.timer=0
         self.curx=int(SIZEX/2)
         self.cury=int(SIZEY/2)
-        self.n=255
+        self.n=1
         self.l=1
         self.curl=0
         self.dir=0
@@ -47,7 +50,7 @@ class Board(object):
         while self.n<=L**2:
             self.n=self.n+1
             pr=isPrimo(self.n)
-            self.punti.append(Punto(self.curx,self.cury,pr))
+            self.punti.append(Punto(self.curx,self.cury,pr,self.n))
             if self.curl!=0:
                 self.curl=self.curl-1
                 if self.dir==0:
@@ -98,6 +101,11 @@ class Board(object):
                 if e.type == pygame.QUIT:
                     self._running = False
                     pygame.quit()
+                if e.type == pygame.MOUSEBUTTONDOWN:
+                    pos=pygame.mouse.get_pos()
+                    for puntino in self.punti:
+                        if pos[0]==puntino.x and pos[1]==puntino.y:
+                            print(puntino.n)
             
 
 class Splash(object):
